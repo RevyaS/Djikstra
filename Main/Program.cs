@@ -8,7 +8,7 @@ Node nodeG = new Node("G");
 Node nodeH = new Node("H");
 Node nodeI = new Node("I");
 
-List<Node> nodeList = new List<Node> { 
+List<Node> nodeList = new List<Node> {
 	nodeA,
 	nodeB,
 	nodeC,
@@ -31,6 +31,7 @@ List<Edge> edgeList = new EdgeBuilder().AddBidirectionalEdge(nodeA, nodeB, 4)
 									.AddBidirectionalEdge(nodeF, nodeH, 6)
 									.AddBidirectionalEdge(nodeF, nodeG, 4)
 									.AddBidirectionalEdge(nodeG, nodeH, 5)
+									.AddBidirectionalEdge(nodeG, nodeI, 5)
 									.AddEdge(nodeE, nodeB, 2)
 									.Edges;
 
