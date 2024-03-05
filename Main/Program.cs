@@ -16,16 +16,16 @@ List<Node> nodeList = new List<Node> {
 	nodeD
 };
 
+
+
 List<Edge> edgeList = new EdgeBuilder().AddBidirectionalEdge(nodeA, nodeB, 10)
-		   								   .AddBidirectionalEdge(nodeA, nodeC, 15)
-										//    .AddBidirectionalEdge(nodeB, nodeD, 12)
-										   .AddEdge(nodeD, nodeB, 12)
-
-										//    .AddBidirectionalEdge(nodeC, nodeD, 1)
-										   .AddEdge(nodeD, nodeC, 1)
-										   .Edges;
-
+.AddBidirectionalEdge(nodeA, nodeC, 15)
+.AddBidirectionalEdge(nodeD, nodeB, 12)
+.AddBidirectionalEdge(nodeD, nodeC, 1)
+.Edges;
 
 DijkstraComputer solver = new DijkstraComputer(edgeList);
 
-solver.ShortestPath(nodeA, nodeD, nodeList);
+ShortestPathData output = solver.ShortestPath(nodeA, nodeD, nodeList);
+
+Console.WriteLine(string.Format("From {0} to {1}:\nDistance: {2}\nPath: {3}", nodeA.NodeName, nodeD.NodeName, output.Distance, string.Join(", ", output.NodeNames)));

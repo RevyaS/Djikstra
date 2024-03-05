@@ -1,5 +1,3 @@
-using System.Linq;
-
 public class DijkstraComputer
 {
     private List<Edge> _edges;
@@ -14,18 +12,15 @@ public class DijkstraComputer
         Dictionary<Node, DijkstraMap> mapping = createMapping(from, to, nodes, _edges);
 
         List<Node> nodeOrder = new List<Node>();
-        int sum = 0;
         for(Node currentNode = to; currentNode != from; currentNode = mapping[currentNode].Parent)
         {
             if(mapping[currentNode].Parent is null) break;
-            sum +=  mapping[currentNode].Distance;
             nodeOrder.Add(currentNode);
         } 
         nodeOrder.Add(from);
-
         nodeOrder.Reverse();
 
-        ShortestPathData output = new ShortestPathData(nodeOrder.Select(x => x.NodeName).ToList(), sum);
+        ShortestPathData output = new ShortestPathData(nodeOrder.Select(x => x.NodeName).ToList(), mapping[to].Distance);
         
         return output;
     }
@@ -41,27 +36,25 @@ public class DijkstraComputer
 
         while(notFinalized.Count > 0)
         {
-            Node minimalDistanceNode = mapping.Where(mapping => notFinalized.Contains(mapping.Key))
-                                            .MinBy(x => x.Value.Distance).Key;
+            Node minimalDistanceNode = notFinalized.Select(node => (Node: node, Mapping: mapping[node]))
+                                                .MinBy(x => x.Mapping.Distance).Node;
             notFinalized.Remove(minimalDistanceNode);
             finalized.Add(minimalDistanceNode);
 
             edges.Where(edge => edge.Start == minimalDistanceNode && !finalized.Contains(edge.End))
                 .ToList()
                 .ForEach(edge => {
-                    Node pairNode = edge.End;
-                    int currentDistance = mapping[pairNode].Distance;
+                    Node end = edge.End;
+                    int currentDistance = mapping[end].Distance;
                     int edgeDistance = edge.Distance;
                     int newDistance = mapping[minimalDistanceNode].Distance + edgeDistance;
                     if(newDistance < currentDistance)
                     {
-                        mapping[pairNode] = mapping[pairNode] with { Distance = newDistance, Parent = minimalDistanceNode };
-                        notFinalized.Add(pairNode);
+                        mapping[end] = mapping[end] with { Distance = newDistance, Parent = minimalDistanceNode };
+                        notFinalized.Add(end);
                     }
                 });
         }
-
-        mapping.Select(x => (Node: x.Key, Distance: x.Value)).ToList().ForEach(x => Console.WriteLine(string.Format("{0}: {1}", x.Node, x.Distance)));
 
         return mapping;
     }
