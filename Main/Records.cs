@@ -1,5 +1,5 @@
 public record Edge(Node Start, Node End, int Distance);
-public record Node(String NodeName);
+public record Node(string NodeName);
 public record DijkstraMap(int Distance, Node Parent);
 public record ShortestPathData(List<string> NodeNames, int Distance);
 
@@ -9,14 +9,22 @@ public class EdgeBuilder
 	public List<Edge> Edges {get => _edges; }
 	public EdgeBuilder AddBidirectionalEdge(Node from, Node to, int distance)
 	{
-		_edges.Add(new Edge(from, to, distance));
-		_edges.Add(new Edge(to, from, distance));
+        addEdgeWhenNotExist(new Edge(from, to, distance));
+		addEdgeWhenNotExist(new Edge(to, from, distance));
 		return this;
 	}
 
 	public EdgeBuilder AddEdge(Node from, Node to, int distance)
 	{
-		_edges.Add(new Edge(from, to, distance));
+        addEdgeWhenNotExist(new Edge(from, to, distance));
 		return this;
 	}
+
+    private void addEdgeWhenNotExist(Edge newEdge)
+    {
+        if(!_edges.Contains(newEdge))
+        {
+		    _edges.Add(newEdge);
+        }
+    }
 }
